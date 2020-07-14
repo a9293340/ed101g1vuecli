@@ -15,6 +15,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     "vue/return-in-computed-property": ["error", {
       "treatUndefinedAsUnspecified": true
-    }]
+    }],
+    'vue/no-parsing-error': [2, { "x-invalid-end-tag": false }]
   }
 }
