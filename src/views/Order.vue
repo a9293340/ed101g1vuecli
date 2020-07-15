@@ -1,8 +1,5 @@
 <template>
   <div>
-<<<<<<< HEAD
-    <h1>order</h1>
-=======
     <!-- div v-for="set in memSetProduct" :key="set">
        <h1>{{set.setName}}</h1>
     </div> -->
@@ -45,16 +42,10 @@
       
       
             </div> 
->>>>>>> 3d5fd0617bb0000e24c93d857eda21ef17649bea
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-// import HelloCool from '@/components/HelloCool.vue'
-=======
 let orderSetdo=[];
 
 
@@ -267,7 +258,6 @@ function setdoCart(){      //套餐的加入購物車
 // import $ from 'jquery';
 // import axios from 'axios';
  }, 500);
->>>>>>> 3d5fd0617bb0000e24c93d857eda21ef17649bea
 </script>
 
 
