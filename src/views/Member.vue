@@ -1,26 +1,158 @@
 <template>
-    <div id="memApp">
-        <div class="memContent" id="memContentOrder">
-            <div class="memOrderBox" v-for="item in memOrderPageArr" :key="item" >
-                <div class="memOrderInfo" v-if='memOrder.length >= 1'>
-                    <p class="memOrderNum">訂單編號：{{item.orderId}}</p>
-                    <div class="memOrderSta">
-                        <img src="../images/member/shoppingIcon.png" alt="">
-                        <p v-if="item.orderStatus == 0">確認中</p>
-                        <p v-if="item.orderStatus == 1">製作中</p>
-                        <p v-if="item.orderStatus == 2">運送中</p>
-                        <p v-if="item.orderStatus == 3">已送達</p>
-                        <p v-if="item.orderStatus == 4">完成訂單</p>
-                        <p v-if="item.orderStatus == 5" style="color: brown;">已取消</p>
-                        <p v-if="item.orderStatus == 6">已歸檔</p>
+    <div>
+        <div id="memApp">
+            <div class="memContent" id="memContentOrder">
+                <div v-for="item in memOrderPageArr" :key="item" >
+                    <div v-if="memOrderPageArr.length >= 1" class="memOrderBox">
+                        <div class="memOrderInfo">
+                            <p class="memOrderNum">訂單編號：{{item.orderId}}</p>
+                            <div class="memOrderSta">
+                                <img src="../images/member/shoppingIcon.png" alt="">
+                                <p v-if="item.orderStatus == 0">確認中</p>
+                                <p v-if="item.orderStatus == 1">製作中</p>
+                                <p v-if="item.orderStatus == 2">運送中</p>
+                                <p v-if="item.orderStatus == 3">已送達</p>
+                                <p v-if="item.orderStatus == 4">完成訂單</p>
+                                <p v-if="item.orderStatus == 5" style="color: brown;">已取消</p>
+                                <p v-if="item.orderStatus == 6">已歸檔</p>
+                            </div>
+                        </div>
+                        <div class="memOrderListBox">
+                            <div v-for='(single,index) in memSingleOrder' :key="index" >
+                                <div v-if='single.soBelongOrder == item.orderId' class="memOrderList">
+                                    <div class="memFlexRight">
+                                        <img :src="single.soImg" alt="">
+                                        <div class="memOrderSomethingBox">
+                                            <p>自選便當</p>
+                                            <p class="memFontSmall">規格:{{single.soRice}}/{{single.sideDishes1}}/{{single.sideDishes2}}/{{single.sideDishes3}}/{{single.mainfood}}</p>
+                                            <p class="memFontSmall">數量： {{single.soAmount}}</p>
+                                        </div>
+                                    </div>
+                                    <p class="memOrderPirceShow">${{single.soPrice}}</p>
+                                </div>
+                            </div>
+                            <div v-for='set in memSetOrder' :key="set">
+                                <div v-if='set.setoBelongOrder == item.orderId' class="memOrderList">
+                                    <div class="memFlexRight">
+                                        <img :src="set.setImage" alt="">
+                                        <div class="memOrderSomethingBox">
+                                            <p v-if='set.setClass == 0'>經典便當-{{set.setName}}</p>
+                                            <p v-if='set.setClass == 1'>季節便當-{{set.setName}}</p>
+                                            <p class="memFontSmall">數量： {{set.setoAmount}}</p>
+                                        </div>
+                                    </div>
+                                    <p class="memOrderPirceShow">${{set.setoPrice}}</p>
+                                </div>
+                            </div>
+                            <div v-for='other in memOtherOrder' :key="other">
+                                <div v-if='other.ooBelongOrder == item.orderId' class="memOrderList" >
+                                    <div class="memFlexRight">
+                                        <img :src="other.opImage" alt="">
+                                        <div class="memOrderSomethingBox">
+                                            <p>{{other.opName}}</p>
+                                            <p class="memFontSmall">數量： {{other.ooAmount}}</p>
+                                        </div>
+                                    </div>
+                                    <p class="memOrderPirceShow">${{other.ooPrice}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="memOrderTotalPriceBox">
+                            <p>訂單金額：<span>${{item.orderTotalPrice}}</span></p>
+                            <div class="memOrderGoToListBtn" :data-order='item.orderId' @click='showOrderList'>查看訂單</div>
+                            <div class="memOrderGoToListBtn" :data-order='item.orderId' v-if='item.orderStatus == 0' @click='cansolOrder'>取消訂單</div>
+                        </div>
                     </div>
                 </div>
-                <div class="memOrderListBox" v-if='memOrder.length >= 1'>
-                    <div class="memOrderList" v-for='(single,index) in memSingleOrder' :key="index" >
-                        <div v-if='single.soBelongOrder == item.orderId'>
-                            <div class="memFlexRight">
-                                <img :src="single.soImg" alt="">
-                                <div class="memOrderSomethingBox">
+                <!-- 分頁 -->
+                <div class="memContentOrderPagesBox">
+                    <div v-for='(order,index) in memOrder' :key="index">
+                        <div 
+                        v-if='index < memOrderPages'
+                        class="memContentOrderPages"
+                        :data-index="index"
+                        @click='memGoNextPage'>
+                            {{index+1}}
+                        </div>
+                    </div>
+                </div>
+                <div class="memOrderBox memGoToOrderX" v-if='memOrderPageArr.length == 0'>您尚未有任何訂單喔，</div>
+            </div>
+
+            <div class="memContentOrderList memContentNone" id="memContentOrderList">
+                <div class="memContentOrderListHeader">
+                    <p class="memOrderListGoBackBtn" @click='GoBackToOrderContent'><span>&lt;</span>回上一頁</p>
+                    <p>訂單編號：<span>{{nowDataSetNumber}}</span></p>
+                </div>
+                <div class="memContentOrderListStatus" v-for='order in nowOrder' :key="order">
+                    <div class="memContentOrderListCircleBox">
+                        <div :class="memChooseCirleColor1">
+                            <img src="../images/member/ulIconGreen.png" alt="" v-if='order.orderStatus == 1'>
+                            <img src="../images/member/ulIcon.png" alt="" v-else>
+                        </div>
+                        <p :class='memChooseCircleFontColor1'>訂單已成立</p>
+                    </div>
+                    <div class="memContentOrderListLine"></div>
+                    <div class="memContentOrderListCircleBox">
+                        <div :class="memChooseCirleColor2">
+                            <img src="../images/member/orderIconGreen.png" alt="" v-if='order.orderStatus == 2'>
+                            <img src="../images/member/orderIcon.png" alt="" v-else>
+                        </div>
+                        <p :class='memChooseCircleFontColor2'>店家已出餐</p>
+                    </div>
+                    <div class="memContentOrderListLine"></div>
+                    <div class="memContentOrderListCircleBox">
+                        <div :class="memChooseCirleColor3" v-if='order.orderClass == 0'>
+                            <img src="../images/member/shippingIconGreen.png" alt="" v-if='order.orderStatus == 3'>
+                            <img src="../images/member/shippingIcon.png" alt="" v-else>
+                        </div>
+                        <p :class='memChooseCircleFontColor3' v-if='order.orderClass == 0'>餐點已送達</p>
+                    </div>
+                    <div class="memContentOrderListLine" v-if='order.orderClass == 0'></div>
+                    <div class="memContentOrderListCircleBox">
+                        <div :class="memChooseCirleColor4">
+                            <img src="../images/member/checkIconGreen.png" alt="" v-if='order.orderStatus == 4'>
+                            <img src="../images/member/close_green.png" alt="" v-if='order.orderStatus == 5'>
+                            <img src="../images/member/checkIcon.png" alt="" v-if='order.orderStatus != 5 && order.orderStatus != 4'>
+                        </div>
+                        <p :class='memChooseCircleFontColor4' v-if='order.orderStatus != 5'>訂單已完成</p>
+                        <p :class='memChooseCircleFontColor4' v-else>訂單已取消</p>
+                    </div>
+                </div>
+                <div class="memContentOrderListQRCodeAndBuyAgainBox">
+                    <div class="memContentOrderListQRCodeBox">
+                        <h3>本訂單之QR-Code
+                            <span>(店內取貨請出示)</span>
+                        </h3>
+                        <div id="memContentOrderListQRCode"></div>
+                    </div>
+                    <div class="memContentOrderListBuyAgainBox" v-for='order in nowOrder' :key='order' >
+                        <h3 v-if='order.orderStatus == 4 || order.orderStatus == 6'>訂單已完成，再次選購請點選下面按鈕</h3>
+                        <h3 v-if='order.orderStatus == 5'>訂單已取消，再次選購請點選下面按鈕</h3>
+                        <h3 v-if='order.orderStatus == 1'>訂單尚未完成，待完成後即可再次選購</h3>
+                        <h3 v-if='order.orderStatus == 3'>訂單尚未完成，待完成後即可再次選購</h3>
+                        <h3 v-if='order.orderStatus == 2'>訂單尚未完成，待完成後即可再次選購</h3>
+                        <div class="memContentOrderListBuyAgainBtn" v-if='order.orderStatus == 4 || order.orderStatus == 5 || order.orderStatus == 6' @click='memBuyAgain'>
+                            再買一次
+                        </div>
+                    </div>
+                </div>
+                <div class="memContentOrderListMailBox" v-for='order in nowOrder' :key='order'>
+                    <div class="memMailLine"></div>
+                    <h3>收件地址</h3>
+                    <p>{{memData.memName}}</p>
+                    <p>{{memData.memPhone}}</p>
+                    <p>{{order.deliveryAddr}}</p>
+                    <p style="color:#37AB64;">訂單備註：{{order.orderRemark}}</p>
+                    <div class="memMailLine"></div>
+                </div>
+                <div class="memContentOrderListBox">
+                    <h3>◆訂購明細</h3>
+                    <div v-for='single in memSingleOrder' :key="single">
+                        <div  v-if='single.soBelongOrder == nowDataSetNumber' class="memContentOrderListReal">
+                            <div class="memContentOrderListRealRight">
+                                <img :src="single.soImg" class="memContentOrderListRealRightImg">
+                                <div class="memOrderListRealSomething">
                                     <p>自選便當</p>
                                     <p class="memFontSmall">規格:{{single.soRice}}/{{single.sideDishes1}}/{{single.sideDishes2}}/{{single.sideDishes3}}/{{single.mainfood}}</p>
                                     <p class="memFontSmall">數量： {{single.soAmount}}</p>
@@ -29,11 +161,11 @@
                             <p class="memOrderPirceShow">${{single.soPrice}}</p>
                         </div>
                     </div>
-                    <div class="memOrderList" v-for='set in memSetOrder' :key="set">
-                        <div v-if='set.setoBelongOrder == item.orderId' >
-                            <div class="memFlexRight">
-                                <img :src="set.setImage" alt="">
-                                <div class="memOrderSomethingBox">
+                    <div v-for='set in memSetOrder' :key="set">
+                        <div  v-if='set.setoBelongOrder == nowDataSetNumber' class="memContentOrderListReal">
+                            <div class="memContentOrderListRealRight">
+                                <img :src="set.setImage">
+                                <div class="memOrderListRealSomething">
                                     <p v-if='set.setClass == 0'>經典便當-{{set.setName}}</p>
                                     <p v-if='set.setClass == 1'>季節便當-{{set.setName}}</p>
                                     <p class="memFontSmall">數量： {{set.setoAmount}}</p>
@@ -42,11 +174,11 @@
                             <p class="memOrderPirceShow">${{set.setoPrice}}</p>
                         </div>
                     </div>
-                    <div class="memOrderList" v-for='other in memOtherOrder' :key="other">
-                        <div v-if='other.ooBelongOrder == item.orderId' >
-                            <div class="memFlexRight">
-                                <img :src="other.opImage" alt="">
-                                <div class="memOrderSomethingBox">
+                    <div v-for='other in memOtherOrder' :key="other">
+                        <div  v-if='other.ooBelongOrder == nowDataSetNumber' class="memContentOrderListReal">
+                            <div class="memContentOrderListRealRight">
+                                <img :src="other.opImage">
+                                <div class="memOrderListRealSomething">
                                     <p>{{other.opName}}</p>
                                     <p class="memFontSmall">數量： {{other.ooAmount}}</p>
                                 </div>
@@ -54,139 +186,12 @@
                             <p class="memOrderPirceShow">${{other.ooPrice}}</p>
                         </div>
                     </div>
-                </div>
-                <div class="memOrderTotalPriceBox" v-if='memOrder.length >= 1'>
-                    <p>訂單金額：<span>${{item.orderTotalPrice}}</span></p>
-                    <div class="memOrderGoToListBtn" :data-order='item.orderId' @click='showOrderList'>查看訂單</div>
-                    <div class="memOrderGoToListBtn" :data-order='item.orderId' v-if='item.orderStatus == 0' @click='cansolOrder'>取消訂單</div>
-                </div>
-            </div>
-            <!-- 分頁 -->
-            <div class="memContentOrderPagesBox" v-if='memOrder.length >= 1'>
-                <div class="memContentOrderPages" v-for='(order,index) in memOrder' :key="index">
-                    <div 
-                    v-if='index < memOrderPages'
-                    :data-index="index"
-                    @click='memGoNextPage'>
-                        {{index+1}}
+                    <div class="memOrderListTotalPriceBox">
+                        <p v-for='order in nowOrder' :key='order'>
+                            訂單金額：
+                            <span>${{order.orderTotalPrice}}</span>
+                        </p>
                     </div>
-                </div>
-            </div>
-            <div class="memOrderBox memGoToOrderX" v-if='memOrder.length == 0'>您尚未有任何訂單喔，</div>
-        </div>
-
-        <div class="memContentOrderList memContentNone" id="memContentOrderList">
-            <div class="memContentOrderListHeader">
-                <p class="memOrderListGoBackBtn" @click='GoBackToOrderContent'><span>&lt;</span>回上一頁</p>
-                <p>訂單編號：<span>{{nowDataSetNumber}}</span></p>
-            </div>
-            <div class="memContentOrderListStatus" v-for='order in nowOrder' :key="order">
-                <div class="memContentOrderListCircleBox">
-                    <div :class="memChooseCirleColor1">
-                        <img src="../images/member/ulIconGreen.png" alt="" v-if='order.orderStatus == 1'>
-                        <img src="../images/member/ulIcon.png" alt="" v-else>
-                    </div>
-                    <p :class='memChooseCircleFontColor1'>訂單已成立</p>
-                </div>
-                <div class="memContentOrderListLine"></div>
-                <div class="memContentOrderListCircleBox">
-                    <div :class="memChooseCirleColor2">
-                        <img src="../images/member/orderIconGreen.png" alt="" v-if='order.orderStatus == 2'>
-                        <img src="../images/member/orderIcon.png" alt="" v-else>
-                    </div>
-                    <p :class='memChooseCircleFontColor2'>店家已出餐</p>
-                </div>
-                <div class="memContentOrderListLine"></div>
-                <div class="memContentOrderListCircleBox">
-                    <div :class="memChooseCirleColor3" v-if='order.orderClass == 0'>
-                        <img src="../images/member/shippingIconGreen.png" alt="" v-if='order.orderStatus == 3'>
-                        <img src="../images/member/shippingIcon.png" alt="" v-else>
-                    </div>
-                    <p :class='memChooseCircleFontColor3' v-if='order.orderClass == 0'>餐點已送達</p>
-                </div>
-                <div class="memContentOrderListLine" v-if='order.orderClass == 0'></div>
-                <div class="memContentOrderListCircleBox">
-                    <div :class="memChooseCirleColor4">
-                        <img src="../images/member/checkIconGreen.png" alt="" v-if='order.orderStatus == 4'>
-                        <img src="../images/member/close_green.png" alt="" v-if='order.orderStatus == 5'>
-                        <img src="../images/member/checkIcon.png" alt="" v-if='order.orderStatus != 5 && order.orderStatus != 4'>
-                    </div>
-                    <p :class='memChooseCircleFontColor4' v-if='order.orderStatus != 5'>訂單已完成</p>
-                    <p :class='memChooseCircleFontColor4' v-else>訂單已取消</p>
-                </div>
-            </div>
-            <div class="memContentOrderListQRCodeAndBuyAgainBox">
-                <div class="memContentOrderListQRCodeBox">
-                    <h3>本訂單之QR-Code
-                        <span>(店內取貨請出示)</span>
-                    </h3>
-                    <div id="memContentOrderListQRCode"></div>
-                </div>
-                <div class="memContentOrderListBuyAgainBox" v-for='order in nowOrder' :key='order' >
-                    <h3 v-if='order.orderStatus == 4'>訂單已完成，再次選購請點選下面按鈕</h3>
-                    <h3 v-if='order.orderStatus == 5'>訂單已取消，再次選購請點選下面按鈕</h3>
-                    <h3 v-if='order.orderStatus == 1'>訂單尚未完成，待完成後即可再次選購</h3>
-                    <h3 v-if='order.orderStatus == 3'>訂單尚未完成，待完成後即可再次選購</h3>
-                    <h3 v-if='order.orderStatus == 2'>訂單尚未完成，待完成後即可再次選購</h3>
-                    <div class="memContentOrderListBuyAgainBtn" v-if='order.orderStatus == 4 || order.orderStatus == 5' @click='memBuyAgain'>
-                        再買一次
-                    </div>
-                </div>
-            </div>
-            <div class="memContentOrderListMailBox" v-for='order in nowOrder' :key='order'>
-                <div class="memMailLine"></div>
-                <h3>收件地址</h3>
-                <p>{{memData.memName}}</p>
-                <p>{{memData.memPhone}}</p>
-                <p>{{order.deliveryAddr}}</p>
-                <p style="color:#37AB64;">訂單備註：{{order.orderRemark}}</p>
-                <div class="memMailLine"></div>
-            </div>
-            <div class="memContentOrderListBox">
-                <h3>◆訂購明細</h3>
-                <div class="memContentOrderListReal" v-for='single in memSingleOrder' :key="single">
-                    <div  v-if='single.soBelongOrder == nowDataSetNumber'>
-                        <div class="memContentOrderListRealRight">
-                            <img :src="single.soImg" class="memContentOrderListRealRightImg">
-                            <div class="memOrderListRealSomething">
-                                <p>自選便當</p>
-                                <p class="memFontSmall">規格:{{single.soRice}}/{{single.sideDishes1}}/{{single.sideDishes2}}/{{single.sideDishes3}}/{{single.mainfood}}</p>
-                                <p class="memFontSmall">數量： {{single.soAmount}}</p>
-                            </div>
-                        </div>
-                        <p class="memOrderPirceShow">${{single.soPrice}}</p>
-                    </div>
-                </div>
-                <div class="memContentOrderListReal" v-for='set in memSetOrder' :key="set">
-                    <div  v-if='set.setoBelongOrder == nowDataSetNumber'>
-                        <div class="memContentOrderListRealRight">
-                            <img :src="set.setImage">
-                            <div class="memOrderListRealSomething">
-                                <p v-if='set.setClass == 0'>經典便當-{{set.setName}}</p>
-                                <p v-if='set.setClass == 1'>季節便當-{{set.setName}}</p>
-                                <p class="memFontSmall">數量： {{set.setoAmount}}</p>
-                            </div>
-                        </div>
-                        <p class="memOrderPirceShow">${{set.setoPrice}}</p>
-                    </div>
-                </div>
-                <div class="memContentOrderListReal" v-for='other in memOtherOrder' :key="other">
-                    <div  v-if='other.ooBelongOrder == nowDataSetNumber'>
-                        <div class="memContentOrderListRealRight">
-                            <img :src="other.opImage">
-                            <div class="memOrderListRealSomething">
-                                <p>{{other.opName}}</p>
-                                <p class="memFontSmall">數量： {{other.ooAmount}}</p>
-                            </div>
-                        </div>
-                        <p class="memOrderPirceShow">${{other.ooPrice}}</p>
-                    </div>
-                </div>
-                <div class="memOrderListTotalPriceBox">
-                    <p v-for='order in nowOrder' :key='order'>
-                        訂單金額：
-                        <span>${{order.orderTotalPrice}}</span>
-                    </p>
                 </div>
             </div>
         </div>
@@ -195,9 +200,8 @@
 
 
 <script>
-import $ from 'jquery';
+// import $ from 'jquery';
 let memContent = document.getElementsByClassName('memContent');
-
 
 export default {
     data() {
@@ -248,7 +252,7 @@ export default {
         },
         GoBackToOrderContent(){
             document.getElementById('memContentOrderList').classList.add('memContentNone');
-            memContent[1].classList.remove('memContentNone');
+            document.getElementById('memContentOrder').classList.remove('memContentNone');
         },
         memBuyAgain(){
             // single
@@ -551,6 +555,8 @@ export default {
                     }
                 }
                 this.memOrderPages = Math.ceil(this.memOrder.length / this.memPage);
+                console.log(this.memOrderPages)
+                console.log(this.memOrderPageArr)
                 fetch('./php/memajax2.php').
                 then(res=>res.json()).
                 then((response)=>{
@@ -569,42 +575,7 @@ export default {
                     })
                 })
             })
-            // $.ajax({
-            //     type: "GET",
-            //     url: "./php/memajax1.php",
-            //     success: function (response) {
-            //         this.memData = JSON.parse(response)[0][0];
-            //         this.memOrder = JSON.parse(response)[1];
-            //         for(let i = 0; i < this.memOrder.length; i++){
-            //             if(i <(this.memPage)){
-            //                 // console.log('aaa',i);
-            //                 this.memOrderPageArr.push(this.memOrder[i]);
-            //             }
-            //         }
-            //         this.memOrderPages = Math.ceil(this.memOrder.length / this.memPage);
-            //         $.ajax({
-            //             type: "GET",
-            //             url: "./php/memajax2.php",
-            //             success: function (response) {
-            //                 this.memSingleOrder = JSON.parse(response)[0];
-            //                 this.memSetOrder = JSON.parse(response)[1];
-            //                 this.memOtherOrder = JSON.parse(response)[2];
-            //                 console.log(JSON.parse(response));
-            //                 console.log(this.memSingleOrder);
-            //                 $.ajax({
-            //                     type: "GET",
-            //                     url: "./php/memajax3.php",
-            //                     success: function (response) {
-            //                         this.memSetProduct = JSON.parse(response)[0];
-            //                         this.memOtherProduct = JSON.parse(response)[1];
-            //                         console.log(this.memOtherProduct);
-            //                     }
-            //                 });
-            //                 document.getElementsByClassName('memContentOrderPages')[0].classList.toggle('memContentOrderPagesDark');
-            //             }
-            //         });
-            //     }
-            // });
+            
         })
 
     },
@@ -612,72 +583,11 @@ export default {
 </script>
 
 <style lang="scss">
-// 色碼
-$orange: #EA6227;
-$green: #37AB64;
-$yellow: #FFD23F;
-$white: #ECEEE7;
-$black: #141212;
-$grey: #595959;
-// 增加的色碼 by Jan
-$violet:#49639F;
-$red:#DF4A32;
-$lightGrey:#ccc;
-$darkred:#8c0606;
-$greyGrey:#999999;
-$memgrey: #9b9b9b;
-$bgcgrey: #c4c0c0;
-@mixin flexStyle($justifyContent,$alignItems,$direction:row) {
-    display: flex;
-    flex-direction: $direction;
-    justify-content: $justifyContent;
-    align-items: $alignItems;
-};
-@mixin fontStyle($color,$size:1rem,$weight:500,$wrap:wrap){
-    font-size: $size;
-    color: $color;
-    font-weight: $weight;
-    white-space: $wrap;
-}
-@mixin textCenter($lineHeight) {
-    text-align: center;
-    line-height: $lineHeight;
-}
-@mixin transitionSet($time,$pro:all,$ori1:50%,$ori2:50%) {
-    transition-duration: $time;
-    transition-property: $pro;
-    @if $ori2 == '' {
-        transform-origin: $ori1 $ori1;
-    } @else{
-        transform-origin: $ori1 $ori2;
-    }
-}
-@mixin btn($width,$height,$fz:20px) {
-    @include transitionSet(.2s);
-    @include textCenter($height);
-    width: $width;
-    height: $height;
-    color: $white;
-    background-color: $orange;
-    font-weight: 700;
-    font-size: $fz;
-    letter-spacing: 2px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transform: scale(1);
-    border: 0;
-    cursor: pointer;
-    &:hover,
-    &:focus{
-        transform: scale(1.1);
-        opacity: .9;
-    }
-};
-
+@import '@/sass/_member.scss';
 #memApp{
     @include flexStyle(flex-start,flex-start,column);
     width: 1200px;
-    // @include border(1px,red);
+    // border: 1px solid red;
     margin: 20px auto;
     padding: 15px;
     .memContent{
@@ -1164,4 +1074,5 @@ $bgcgrey: #c4c0c0;
         }
     }
 }
+
 </style>

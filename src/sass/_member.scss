@@ -1,0 +1,61 @@
+// 色碼
+$orange: #EA6227;
+$green: #37AB64;
+$yellow: #FFD23F;
+$white: #ECEEE7;
+$black: #141212;
+$grey: #595959;
+// 增加的色碼 by Jan
+$violet:#49639F;
+$red:#DF4A32;
+$lightGrey:#ccc;
+$darkred:#8c0606;
+$greyGrey:#999999;
+$memgrey: #9b9b9b;
+$bgcgrey: #c4c0c0;
+@mixin flexStyle($justifyContent,$alignItems,$direction:row) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
+};
+@mixin fontStyle($color,$size:1rem,$weight:500,$wrap:wrap){
+    font-size: $size;
+    color: $color;
+    font-weight: $weight;
+    white-space: $wrap;
+}
+@mixin textCenter($lineHeight) {
+    text-align: center;
+    line-height: $lineHeight;
+}
+@mixin transitionSet($time,$pro:all,$ori1:50%,$ori2:50%) {
+    transition-duration: $time;
+    transition-property: $pro;
+    @if $ori2 == '' {
+        transform-origin: $ori1 $ori1;
+    } @else{
+        transform-origin: $ori1 $ori2;
+    }
+}
+@mixin btn($width,$height,$fz:20px) {
+    @include transitionSet(.2s);
+    @include textCenter($height);
+    width: $width;
+    height: $height;
+    color: $white;
+    background-color: $orange;
+    font-weight: 700;
+    font-size: $fz;
+    letter-spacing: 2px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transform: scale(1);
+    border: 0;
+    cursor: pointer;
+    &:hover,
+    &:focus{
+        transform: scale(1.1);
+        opacity: .9;
+    }
+};
