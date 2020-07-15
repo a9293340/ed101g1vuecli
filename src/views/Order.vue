@@ -201,8 +201,9 @@ function setdoCart(){      //套餐的加入購物車
  
 </script>
 
-<style lang="scss">
 
+<<<<<<< HEAD
+=======
     #buy_app3 {
   height: 650px;
   font-family: 'Noto Sans TC','Noto Sans', '微軟正黑體', "Times New Roman", sans-serif;
@@ -283,4 +284,5 @@ function setdoCart(){      //套餐的加入購物車
 }
 
 </style>
+>>>>>>> 3d5fd0617bb0000e24c93d857eda21ef17649bea
 

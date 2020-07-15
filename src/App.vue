@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <header>
-      <img src="./images/header/user.png" id="memHead">
-    </header>
     <router-view id="routerView"/>
     <div id="nav">
       <router-link class="navContent" to="/">訂餐</router-link> 
       <router-link class="navContent" to="/shoppingcart">購物車</router-link> 
-      <router-link class="navContent" to="/member">會員專區</router-link> 
-      <router-link class="navContent" to="/siginin">登入</router-link>
+      <router-link class="navContent" id="navMem" to="/member">會員專區</router-link> 
+      <router-link class="navContent" id="navSign" to="/siginin">登入</router-link>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+
+}
+</script>
 
 <style lang="scss">
 body{
@@ -29,31 +32,23 @@ body{
   #routerView{
     width: 100%;
   }
-  header{
-    max-width: 576px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    margin: 20px 0;
-    #memHead{
-      // margin-left: 30px;
-      width: 50px;
-      border-radius: 50%;
-      border: 1px solid #000;
-    } 
-  }
 }
 #nav {
   // padding: 30px;
   width: 100%;
+  min-width: 350px;
   margin: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   .navContent{
-    width: 22%;
+    width: 34%;
+    background-color: rgb(184, 228, 231);
+    padding: 20px 0;
+  }
+  #navMem{
+    display: none;
   }
   a {
     font-weight: bold;
@@ -62,6 +57,7 @@ body{
     text-align: center;
     &.router-link-exact-active {
       color: #42b983;
+      background-color: rgb(230, 193, 146);
     }
   }
 }

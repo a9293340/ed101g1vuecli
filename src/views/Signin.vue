@@ -219,11 +219,10 @@ export default {
                         sessionStorage['memImage'] = member.memImage;
                         sessionStorage['mEmmEmId'] = member.memId;
                         sessionStorage['orderMemScore'] = member.memScore;
-                        document.getElementById('memHead').src = sessionStorage['memImage'];
-                        $('#member_aflogin').show(500);
-                        $('#homeContainderBgc').hide(500);
-                        $('#homeContainer').hide(500);
-                        $('#member').hide(500);
+                        // document.getElementById('memHead').src = sessionStorage['memImage'];
+                        document.getElementById('navMem').style.display = 'block';
+                        document.getElementById('navSign').style.display = 'none';
+                        location.href = './#/';
                     }
                 }
             });
@@ -427,7 +426,8 @@ export default {
 
 <style lang="scss">
     .homeTab-wrap {
-        max-width: 100%;
+        width: 100%;
+        min-width: 350px;
         display: flex;
         flex-wrap: wrap;
         list-style: none;
