@@ -1,5 +1,315 @@
 <template>
   <div>
-    <h1>ShoppingCart</h1>
+  <div>
+     <h3>經典便當</h3>
+    <div class="classicalbento" v-for="item in finalsetdolist" :key="item">
+      <!-- <span :id="'setdodelete'+ item.setdoId" :data-num="item.setdoId" width="15" height="15"> -->
+      <img class="orderclose" src="../images/showbenton/close.png" alt="" :id="'setdodelete'+ item.setdoId"
+        :data-num="item.setdoId" @click='xx' />
+      <!-- </span> -->
+      <div class="other_box">
+        <div class="selimg">
+          <img :src="item.setdoImg" width="102" height="102" />
+        </div>
+        <table>
+          <tr>
+            <td>{{item.setdoName}}</td>
+            <td>NT${{item.setdoPrice}}</td>
+            <td></td>
+            <td>x{{item.setdoMany}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>  
   </div>
 </template>
+
+<script>
+
+
+export default {
+  data() {
+    return {
+      finalsetdolist:[]
+    }
+  },
+  mounted(){
+         this.aaa();
+
+  },
+  methods: {
+
+    aaa(){
+          var finalsetdolist1 = JSON.parse(localStorage.getItem('setdoMenuList'));
+          this.finalsetdolist = finalsetdolist1;
+          let setdoMenu = finalsetdolist1;
+          console.log(setdoMenu);
+    },
+   xx(e){
+           let A = e.target.dataset.num;
+          console.log(A);
+          var finalsetdolist1 = JSON.parse(localStorage.getItem('setdoMenuList'));
+          // let setdoMenu = finalsetdolist1;
+          for (let i = 0; i < finalsetdolist1.length; i++) {
+
+              if (finalsetdolist1[i].setdoId == Number(A)) {
+                 finalsetdolist1.splice(i, 1);
+                  // setdoMenu.splice(i, 1);
+                  localStorage.setItem('setdoMenuList', JSON.stringify(finalsetdolist1));
+                  this.aaa();
+                  
+              }
+          }
+          
+          
+    
+    },
+      
+}
+}
+</script>
+
+<style lang="scss">
+    // @import '../mixins/mixin';
+
+#orderAdress{
+  display: none;
+  margin: 10px 0;
+  button{
+    font-family: 'Noto Sans TC','Noto Sans', '微軟正黑體', "Times New Roman", sans-serif;
+    font-size: 13.3333px; 
+    padding: 0;
+    width: 76px;
+    border: none;
+    cursor: pointer;
+  }
+  input{
+    border-radius: 5px;
+    border: none;
+  }
+  
+  
+}
+
+.ordercart { 
+  
+  position: fixed;
+  right: -380px; 
+  top: 0;
+  width: 350px;
+  height: 100%;
+  // background-color: rgb(225, 226, 138);
+  // background-color:rgb(114, 156, 114);
+  // background-color:rgb(149, 194, 149);
+  background-color:#f0edc3;
+  opacity: 0.95;
+  overflow-y: scroll;
+  padding: 10px;
+  z-index: 1000;
+  transition-duration: .5s;
+  transition-property: all;
+  #orderListText{ 
+    margin-left: 15px;
+    margin-top: 15px;
+    resize : none;
+  }
+  .orderTextarea{
+    p{
+      margin-top: 15px;
+      margin-left: 10px;
+    }
+    textarea{
+      border-radius: 5px;
+    }
+  }
+  .selfbenton,
+  .classicalbento,
+  .otherproduct {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 5px 5px;
+    // // margin-right: 5%;
+    // margin-top: 5%;
+    // border: 1px solid #000;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: .5s;
+
+    &:hover {
+      box-shadow: 3px 3px 10px #000;
+      cursor: pointer;
+ }
+    .selfbento_box{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      .selimg{ 
+        width: 100px;
+        height: 100px;
+        // border: 1px solid #000;
+
+      }}  
+      .other_box{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        
+        .selimg{
+          width: 100px;
+          height: 100px;
+          // border: 1px solid #000;
+          margin-bottom: 25px;
+        }
+      }
+    
+   
+
+    // &::before {
+    //   content: "";
+    //   width: 100px;
+    //   height: 100px;
+    //   border: 1px solid #000;
+    //   position: absolute;
+    //   left: 10px;
+    // }
+  }
+
+  h3 {
+    margin-top: 15px;
+    margin-left: 5px;
+  }
+
+
+  .selfbenton {
+    // display: flex;
+    // flex-direction: column;
+    // align-items: flex-end;
+    // margin-right: 5%;
+    height: 200px;
+
+    table {
+      tr {
+        td:nth-child(1) {
+          width: 101px;
+
+        }
+      }
+    }
+  }
+
+  // span {
+  //   color: burlywood;
+  //   cursor: pointer;
+  //   // margin: 15px;
+  //   margin-right: 5%;
+  //   height: 50px;
+  // }
+    #orderUseScore{
+      width: 60px;
+    }
+  table {
+    // width: 300px;
+    // border: 1px solid #000;
+    width: 180px;
+    // margin-right: 3%; 
+  }
+
+  .classicalbento,
+  .otherproduct {
+    height: 150px;
+    margin-top: 5%;
+
+    span {
+      margin-bottom: -5%;
+    }
+
+    table {
+      margin-bottom: 10%;
+
+
+    }
+  }
+
+  .finaltotal {
+    // display: flex;
+    // justify-content: space-evenly; 
+    text-align: left;
+    margin: 10px 20px;
+      #OrTotal{
+        color:red;
+      }
+      #orderYourSorce{
+        // color: $grey;
+      }
+
+      div{
+        margin-top: 5px;
+      }
+
+    // .total {
+    //   font-size: $fzMd;
+    // }
+  }
+
+  .buy {
+    width: 200px;
+    height: 50px;
+    border-radius: 50px;
+    // background-color: rgb(255, 174, 82);
+    background-color: rgb(218, 148, 68);
+    margin-top: 20px;
+    margin-left: 20%;
+    text-align: center;
+    line-height: 45px;
+    margin-bottom: 10%;
+    color: white;
+    cursor: pointer;
+    transition: .5s;
+    font-family: 'Noto Sans TC','Noto Sans', '微軟正黑體', "Times New Roman", sans-serif;
+    &:hover {
+      background-color: rgb(196, 125, 44);
+    }
+  }
+  .orderbuy{
+    font-family: 'Noto Sans TC','Noto Sans', '微軟正黑體', "Times New Roman", sans-serif;
+    width: 160px;
+    cursor: pointer;
+    background-color: #FFD23F;
+    border: none;
+    border-radius: 5px;
+  }
+ 
+}
+
+.orderclose { 
+  margin-top: 12px;
+  margin-right: 15px; 
+  width: 15px; 
+  height: 15px;
+  transition: .5s;
+
+  &:hover {
+    transform: rotate(360deg);
+    content: url(../images/homepage/close_red.png);
+  }
+}
+
+.ordercartOpen{
+  right: 0;
+}
+
+#orderCartClose{  
+  margin-left: 300px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+
+
+</style>

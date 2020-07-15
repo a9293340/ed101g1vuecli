@@ -50,16 +50,16 @@ let orderSetdo=[];
 
 
 
-fetch("./php/memajax3.php")
-    .then(res => res.json())
-    .then((res)=>{
-      console.log(res)
-      // this.orderSetdo = res[0];
-      orderSetdo = res[0];
-      console.log(orderSetdo);
-      // this.memOtherProduct = res[1];
-      // console.log(this.memOtherProduct);
-    })
+// fetch("./php/memajax3.php")
+//     .then(res => res.json())
+//     .then((res)=>{
+//       console.log(res)
+//       // this.orderSetdo = res[0];
+//       orderSetdo = res[0];
+//       console.log(orderSetdo);
+//       // this.memOtherProduct = res[1];
+//       // console.log(this.memOtherProduct);
+//     })
 
 export default {
   data(){
@@ -87,93 +87,30 @@ export default {
       console.log(orderSetdo);
       this.memOtherProduct = res[1];
       console.log(this.memOtherProduct);
-    })
-  // this.$nextTick(function () {
-  //     axios.get('./php/memajax3.php').then(function(res){
-  //     Vue.$data.memSetProduct = res.data[0];
-  //   })
-  //   })
-  }
-}
-
- setTimeout(function() {
-    
- 
-
-    
-     console.log(orderSetdo);
+       console.log(orderSetdo);
         let setdocount=[];
         var setdoMany = 0;
         var setdoId = 0;
         var setdoName = 0;
         var setdoPrice = 0;
         var setdoImg = 0;
-  
         var setdoNum = 0;
         let setdoMenu=[];
   
-      
+var finalsetdolist1 = JSON.parse(localStorage.getItem('setdoMenuList'));
+setdoMenu = finalsetdolist1;
+
+
+      setTimeout(function() {
 for(var j=0; j < orderSetdo.length;j++){    //套餐的+- 購物車   click事件
     if(orderSetdo[j].setStatus==1){
     setdocount[orderSetdo[j].setId]=0;
     document.getElementById(`setdocountplus${orderSetdo[j].setId}`).addEventListener('click',setdoplus)
     document.getElementById(`setdocountminus${orderSetdo[j].setId}`).addEventListener('click',setdominus)
     document.getElementById(`setdocart${orderSetdo[j].setId}`).addEventListener('click',setdoCart)
-    // document.getElementById(`setdoimg${orderSetdo[j].setId}`).addEventListener('click',setdolightBox)
+   
     }
-}     
-// document.getElementsByClassName('closelightbox3')[0].addEventListener('click',closelightbox3);
-
-
-
-// function setdolightBox(){
-//     document.getElementsByClassName('box3')[0].style.display='block';
-//     document.getElementsByClassName('box3')[1].style.display='block';
-//     let A = this.dataset.id;
-//     console.log(A);
-//     for(let i = 0;i<orderSetdo.length;i++){
-//         if(orderSetdo[i].setId == Number(A)){
-//             document.getElementById('setdolightTitle').innerText = orderSetdo[i].setName;
-//             document.getElementById('setdolightImg').src = orderSetdo[i].setImage;
-//             document.getElementById('setdolightText').innerText = orderSetdo[i].setInfo;
-//         }
-//     }
-// }
-
-// document.getElementsByClassName('closelightbox3')[0].addEventListener('click',closelightbox3);
-// function closelightbox3(){ 
-//     document.getElementsByClassName('box3')[0].style.display='none';
-//     document.getElementsByClassName('box3')[1].style.display='none';
-// }
-
-
-
-// document.getElementsByClassName('closelightbox1')[0].addEventListener('click',closelightBox1)
-
-
-
-// document.getElementsByClassName('closelightbox0')[0].addEventListener('click',closelightBox0)
-
-
-
-// document.getElementsByClassName('closelightbox2')[0].addEventListener('click',closelightBox2)
-
-
-
-
-
-
-
-
-
-
-
-//購物車
-
-
-
-
-
+}    
 
 
 
@@ -249,15 +186,19 @@ function setdoCart(){      //套餐的加入購物車
         }
     }
 }
-
-
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-// import HelloCool from '@/components/HelloCool.vue'
-// import Vue from 'vue';
-// import $ from 'jquery';
-// import axios from 'axios';
  }, 500);
+    })
+
+    
+  // this.$nextTick(function () {
+  //     axios.get('./php/memajax3.php').then(function(res){
+  //     Vue.$data.memSetProduct = res.data[0];
+  //   })
+  //   })
+  }
+}
+
+ 
 </script>
 
 <style lang="scss">
