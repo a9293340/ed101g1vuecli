@@ -255,11 +255,13 @@ export default {
     document.getElementById('orderYourSorce').innerText=`獲得積分: ${OrYourScore}點`;
       this.OrYourScore = OrYourScore;
       this.finalprice = OrTotalPrice;
+      this.finalOrTotalPrice = OrTotalPrice;
     },
     orederScoreAndPrice(){
       let  MemScore = sessionStorage.getItem('orderMemScore');
 
       let finalOrTotalPrice = this.finalprice;
+      
 
 
       if(parseInt(document.getElementById('orderUseScore').value) <= parseInt(MemScore) && parseInt(document.getElementById('orderUseScore').value) <= parseInt(finalOrTotalPrice) && document.getElementById('orderUseScore').value !== ""){
