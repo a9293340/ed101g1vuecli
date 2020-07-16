@@ -267,6 +267,7 @@ export default {
       if(parseInt(document.getElementById('orderUseScore').value) <= parseInt(MemScore) && parseInt(document.getElementById('orderUseScore').value) <= parseInt(finalOrTotalPrice) && document.getElementById('orderUseScore').value !== ""){
     
     MemScore = MemScore - document.getElementById('orderUseScore').value;
+    this.MemScore = MemScore;
     document.getElementById('orderScore').innerText = `我的積分：`+ MemScore + `點`;
     finalOrTotalPrice = finalOrTotalPrice - document.getElementById('orderUseScore').value;
     this.finalOrTotalPrice = finalOrTotalPrice;
@@ -341,24 +342,31 @@ export default {
         //   }
        
         }
-        // sessionStorage.setItem('orderMemScore',parseInt(MemScore)+parseInt(OrYourScore));
+        sessionStorage.setItem('orderMemScore',parseInt(this.MemScore)+parseInt(this.OrYourScore));
+
+
+
+         this.finalsetdolist = [];
+          this.finalsinglelist = [];
+          this.finalorderlist = [];
 
         // finalsinglelist = [];
         // singleorderlist.$data.finalsinglelist = finalsinglelist;
         // orderCart=finalsinglelist;
-        // localStorage.setItem('singleOrder', JSON.stringify(finalsinglelist));
+        localStorage.setItem('singleOrder', JSON.stringify(this.finalsinglelist));
     
         // finalsetdolist = [];
         // singleorderlist.$data.finalsetdolist = finalsetdolist;
         // setdoMenu = finalsetdolist;;
-        // localStorage.setItem('setdoMenuList', JSON.stringify(finalsetdolist));
+        localStorage.setItem('setdoMenuList', JSON.stringify(this.finalsetdolist));
     
         // finalorderlist = [];
         // singleorderlist.$data.finalorderlist = finalorderlist;
         // otherMenu=finalorderlist;
-        // localStorage.setItem('otherOrder', JSON.stringify(finalorderlist));
+        localStorage.setItem('otherOrder', JSON.stringify(this.finalorderlist));
         
-        // 
+         this.aaa();
+         this.OrderTotalPrice();
      
         // OrderTotalPrice();
         document.getElementById('orderListText').value="";
