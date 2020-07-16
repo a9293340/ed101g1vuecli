@@ -219,9 +219,12 @@ export default {
                         sessionStorage['memImage'] = member.memImage;
                         sessionStorage['mEmmEmId'] = member.memId;
                         sessionStorage['orderMemScore'] = member.memScore;
+                        sessionStorage['signinOrNot'] = 1;
+                        if(sessionStorage['signinOrNot'] == 1){
+                            document.getElementById('navMem').style.display = 'block';
+                            document.getElementById('navSign').style.display = 'none';
+                        }
                         // document.getElementById('memHead').src = sessionStorage['memImage'];
-                        document.getElementById('navMem').style.display = 'block';
-                        document.getElementById('navSign').style.display = 'none';
                         location.href = './#/';
                     }
                 }

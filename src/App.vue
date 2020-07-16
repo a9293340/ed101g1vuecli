@@ -12,7 +12,12 @@
 
 <script>
 export default {
-
+  mounted(){
+    if(sessionStorage['signinOrNot'] == 1){
+      document.getElementById('navMem').style.display = 'block';
+      document.getElementById('navSign').style.display = 'none';
+    }
+  }
 }
 </script>
 
