@@ -10,8 +10,8 @@
                         <div v-if="item.setStatus==1 && item.setClass ==0" class="buy_card3">
                           <img :id="'setdoimg'+item.setId"  :data-id="item.setId" v-bind:src="item.setImage" atl="" width="200" height="200">
                           <div class="buy_name">{{item.setName}}&nbsp;&nbsp;<span>$</span>{{item.setPrice}}</div>
-                          <div><button class="orderbutton" :id ="'setdocountminus'+item.setId" :data-num="item.setId">-</button><span class="ordercount" :id="'setdocount'+item.setId">0</span><button class="orderbutton" :id ="'setdocountplus'+item.setId" :data-num="item.setId">+</button>
-                                <button  :id="'setdocart'+item.setId" :data-id="item.setId" class="cart">加入購物車</button>
+                          <div><button  class="orderbutton" :id ="'setdocountminus'+item.setId" :data-num="item.setId" @click="setdominus">-</button><span class="ordercount" :id="'setdocount'+item.setId">0</span><button class="orderbutton" :id ="'setdocountplus'+item.setId" :data-num="item.setId" @click="setdoplus">+</button>
+                                <button  :id="'setdocart'+item.setId" :data-id="item.setId" class="cart" @click="setdoCart">加入購物車</button>
                           </div>
                         </div>
 
@@ -24,8 +24,8 @@
                         <div v-if="item.setStatus==1 && item.setClass ==1" class="buy_card3">
                           <img :id="'setdoimg'+item.setId"  :data-id="item.setId" v-bind:src="item.setImage" atl="" width="200" height="200">
                           <div class="buy_name">{{item.setName}}&nbsp;&nbsp;<span>$</span>{{item.setPrice}}</div>
-                          <div><button class="orderbutton" :id ="'setdocountminus'+item.setId" :data-num="item.setId">-</button><span class="ordercount" :id="'setdocount'+item.setId">0</span><button class="orderbutton" :id ="'setdocountplus'+item.setId" :data-num="item.setId">+</button>
-                                <button  :id="'setdocart'+item.setId" :data-id="item.setId" class="cart">加入購物車</button>
+                          <div><button class="orderbutton" :id ="'setdocountminus'+item.setId" :data-num="item.setId" @click="setdominus">-</button><span class="ordercount" :id="'setdocount'+item.setId">0</span><button class="orderbutton" :id ="'setdocountplus'+item.setId" :data-num="item.setId"  @click="setdoplus">+</button>
+                                <button  :id="'setdocart'+item.setId" :data-id="item.setId" class="cart" @click="setdoCart">加入購物車</button>
                           </div>
                         </div>
 
@@ -46,20 +46,18 @@
 </template>
 
 <script>
-let orderSetdo=[];
+// let orderSetdo=[];
+let setdocount=[];
+let setdoMany = 0;
+let setdoId = 0;
+let setdoName = 0;
+let setdoPrice = 0;
+let setdoImg = 0;
+let setdoNum = 0;
+let setdoMenu=[];
 
 
 
-// fetch("./php/memajax3.php")
-//     .then(res => res.json())
-//     .then((res)=>{
-//       console.log(res)
-//       // this.orderSetdo = res[0];
-//       orderSetdo = res[0];
-//       console.log(orderSetdo);
-//       // this.memOtherProduct = res[1];
-//       // console.log(this.memOtherProduct);
-//     })
 
 export default {
   data(){
@@ -69,97 +67,76 @@ export default {
     }
   },
   mounted(){
-    // $.ajax({
-    //       type: "GET",
-    //       url: "./php/memajax3.php",
-    //       success: function (response) {
-    //           this.memSetProduct = JSON.parse(response)[0];
-    //           this.memOtherProduct = JSON.parse(response)[1];
-    //           console.log(this.memOtherProduct);
-    //       }
-    //   });
+ 
     fetch("./php/memajax3.php")
     .then(res => res.json())
     .then((res)=>{
       console.log(res)
       this.orderSetdo = res[0];
-      orderSetdo = res[0];
-      console.log(orderSetdo);
-      this.memOtherProduct = res[1];
-      console.log(this.memOtherProduct);
-       console.log(orderSetdo);
-        let setdocount=[];
-        var setdoMany = 0;
-        var setdoId = 0;
-        var setdoName = 0;
-        var setdoPrice = 0;
-        var setdoImg = 0;
-        var setdoNum = 0;
-        let setdoMenu=[];
-  
-var finalsetdolist1 = JSON.parse(localStorage.getItem('setdoMenuList'));
-setdoMenu = finalsetdolist1;
+      console.log(this.orderSetdo);
+        this.first();
+    })
+
+ 
+
+  },
+  methods:{
+
+    first(){
+      if(localStorage.getItem('setdoMenuList')){
+        setdoMenu = JSON.parse(localStorage.getItem('setdoMenuList'));
+      }
 
 
-      setTimeout(function() {
-for(var j=0; j < orderSetdo.length;j++){    //套餐的+- 購物車   click事件
-    if(orderSetdo[j].setStatus==1){
-    setdocount[orderSetdo[j].setId]=0;
-    document.getElementById(`setdocountplus${orderSetdo[j].setId}`).addEventListener('click',setdoplus)
-    document.getElementById(`setdocountminus${orderSetdo[j].setId}`).addEventListener('click',setdominus)
-    document.getElementById(`setdocart${orderSetdo[j].setId}`).addEventListener('click',setdoCart)
-   
-    }
-}    
+      for(var j=0; j < this.orderSetdo.length;j++){    
+        if(this.orderSetdo[j].setStatus==1){
+          setdocount[this.orderSetdo[j].setId]=0;
+          console.log(setdocount[this.orderSetdo[j].setId]);
+        }
+      }
+    },
+      setdoplus(e){
+          let num = e.target.dataset.num
+          setdocount[num]++;
+          console.log(setdocount[num]);
+          document.getElementById(`setdocount${num}`).innerText = setdocount[num];
+      },
+      setdominus(e){
+          let num = e.target.dataset.num
+          if(setdocount[num]>0){
+          setdocount[num]--;
+          console.log(setdocount[num]);
+          document.getElementById(`setdocount${num}`).innerText = setdocount[num];
+          }
+      },
+      setdoCart(e){
+        let A = e.target.dataset.id;
 
+        console.log(A);
+        for(let i = 0;i<this.orderSetdo.length;i++){
+          if(this.orderSetdo[i].setId == Number(A)){
+                setdoMany =  document.getElementById(`setdocount${A}`).innerText;
+                setdoId = this.orderSetdo[i].setId;
+                setdoName = this.orderSetdo[i].setName;
+                setdoPrice = this.orderSetdo[i].setPrice;
+                setdoImg = this.orderSetdo[i].setImage;
+                if(setdoMany>0){
 
-
-function setdoplus(){     //套餐數量++
-    let num = this.dataset.num
-    setdocount[num]++;
-    console.log(setdocount[num]);
-    document.getElementById(`setdocount${num}`).innerText = setdocount[num];
-}
-   
-function setdominus(){    //套餐數量--
-    let num = this.dataset.num
-    if(setdocount[num]>0){
-    setdocount[num]--;
-    console.log(setdocount[num]);
-    document.getElementById(`setdocount${num}`).innerText = setdocount[num];
-    }
-
-}
-
-
-function setdoCart(){      //套餐的加入購物車
-    let A = this.dataset.id;
-    console.log(A);
-    for(let i = 0;i<orderSetdo.length;i++){
-        if(orderSetdo[i].setId == Number(A)){
-            setdoMany =  document.getElementById(`setdocount${A}`).innerText;
-            setdoId = orderSetdo[i].setId;
-            setdoName = orderSetdo[i].setName;
-            setdoPrice = orderSetdo[i].setPrice;
-            setdoImg = orderSetdo[i].setImage;
-            if(setdoMany>0){
-
-              var  setdoList=
-                {
-                    setdoNum:`${setdoNum}`,
-                    setdoMany:`${setdoMany}`,
-                    setdoId:`${setdoId}`,
-                    setdoName:`${setdoName}`,
-                    setdoPrice:`${setdoPrice}`,
-                    setdoImg:`${setdoImg}`,
-                }
+                  var  setdoList={
+                        setdoNum:`${setdoNum}`,
+                        setdoMany:`${setdoMany}`,
+                        setdoId:`${setdoId}`,
+                        setdoName:`${setdoName}`,
+                        setdoPrice:`${setdoPrice}`,
+                        setdoImg:`${setdoImg}`,
+                        }
 
                 var samename = 0;
                 if(setdoMenu.length>0){
-                     for(var c =0  ;c < setdoMenu.length; c++){
-                            if(setdoMenu[c].setdoName == setdoList.setdoName){
+                     for(let j=0  ;j < setdoMenu.length; j++){
+                            if(setdoMenu[j].setdoName == setdoList.setdoName){
                                 samename=1;
-                            setdoMenu[c].setdoMany = parseInt(setdoMenu[c].setdoMany)+parseInt(setdoList.setdoMany);
+                            setdoMenu[j].setdoMany = parseInt(setdoMenu[j].setdoMany)+parseInt(setdoList.setdoMany);
                             } 
                      }
                     if(samename!=1){
@@ -183,18 +160,9 @@ function setdoCart(){      //套餐的加入購物車
             }else{
                 alert("還沒選數量喔");
             }
+          }
         }
-    }
-}
- }, 500);
-    })
-
-    
-  // this.$nextTick(function () {
-  //     axios.get('./php/memajax3.php').then(function(res){
-  //     Vue.$data.memSetProduct = res.data[0];
-  //   })
-  //   })
+      }  
   }
 }
 
