@@ -82,19 +82,19 @@ export default {
   },
   methods:{
 
-    first(){
-      if(localStorage.getItem('setdoMenuList')){
-        setdoMenu = JSON.parse(localStorage.getItem('setdoMenuList'));
-      }
-
-
-      for(var j=0; j < this.orderSetdo.length;j++){    
-        if(this.orderSetdo[j].setStatus==1){
-          setdocount[this.orderSetdo[j].setId]=0;
-          console.log(setdocount[this.orderSetdo[j].setId]);
+      first(){
+        if(localStorage.getItem('setdoMenuList')){
+          setdoMenu = JSON.parse(localStorage.getItem('setdoMenuList'));
         }
-      }
-    },
+
+
+        for(var j=0; j < this.orderSetdo.length;j++){    
+          if(this.orderSetdo[j].setStatus==1){
+            setdocount[this.orderSetdo[j].setId]=0;
+            console.log(setdocount[this.orderSetdo[j].setId]);
+          }
+        }
+      },
       setdoplus(e){
           let num = e.target.dataset.num
           setdocount[num]++;

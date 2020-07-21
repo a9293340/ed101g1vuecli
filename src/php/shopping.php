@@ -27,7 +27,8 @@ try{
     $lastId = $pdo->lastInsertId();
     if(is_array($orderSin)){
     for($i=0;$i<count($orderSin); $i++){
-foreach($orderSin[$i] as $key => $value){
+    
+    foreach($orderSin[$i] as $key => $value){
     if($key == "soPrice"){
         $soPrice = $value;
     }
@@ -47,18 +48,21 @@ foreach($orderSin[$i] as $key => $value){
         $singleId3 = $value;
     }
     if($key == 'soImg'){
-        $soImg = $value;
+        $soImg =$value;
         
     }
 }
+// $soImg=strval($soImg);
+$stringpic = substr($soImg,0,4);
 
+if($stringpic == "data"){
 
 $upload_dir = "../images/singlePiC/";  //檢查資料夾存不存在
 if( ! file_exists($upload_dir )){
   mkdir($upload_dir);
 }
 
-echo json_encode($soImg);
+// echo json_encode($soImg);
 $soImg = str_replace('data:image/png;base64,', '', $soImg);
 $soImg = str_replace(' ', '+', $soImg);
 
@@ -71,7 +75,19 @@ $imgRoad ="./images/singlePiC/" . $fileName .  $i . ".png";
 $success = file_put_contents($file, $data);
 
 
+}else{
+    
+    $imgRoad=$soImg;
+    // echo json_encode($imgRoad);
+    // echo json_encode($soPrice);
+    // echo json_encode($lastId);
+    // echo json_encode($meatId);//???
+    // echo json_encode($singleId1);//???
+    // echo json_encode($singleId2);//???
+    // echo json_encode($singleId3);//???
 
+    // die;
+}
 // echo $success ? $file : 'error';
 
 
