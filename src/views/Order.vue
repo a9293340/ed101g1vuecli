@@ -249,5 +249,28 @@ export default {
 
 }
 
+
+
+@media screen and ( max-width: 576px ){ 
+  
+ 
+  #buy_app3{
+    width: 375px;
+    height: 300px;
+    margin-bottom: 50px;
+    .buy_setdo_containter{
+    width: 100%;
+    flex-wrap:nowrap;
+    overflow-x: auto;
+    overflow-y: auto;
+    .buy_card3{
+    margin: 10px 20px;
+    }
+  }
+  }
+ 
+ 
+
+}  
 </style>
 
